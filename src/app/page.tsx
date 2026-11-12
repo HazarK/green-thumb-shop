@@ -1,69 +1,135 @@
-import Image from "next/image";
+import Link from "next/link";
+import { PlantArt } from "@/components/art/PlantArt";
+import { HomeReminderBanner } from "@/components/HomeReminderBanner";
+import { ArrowRightIcon, BellIcon, ShieldIcon, SproutIcon, TruckIcon } from "@/components/Icons";
+import { ProductCard } from "@/components/ProductCard";
+import { btnPrimary, btnSecondary, btnSun, container, eyebrow } from "@/components/ui";
+import { plants } from "@/data/plants";
+import { products } from "@/data/products";
 
-export default function Home() {
+export default function HomePage() {
+  const featured = products.filter((p) => p.featured);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <>
+      <HomeReminderBanner />
+
+      {/* Hero */}
+      <section className={`${container} grid items-center gap-10 pb-6 pt-10 md:grid-cols-2 md:pt-16`}>
+        <div>
+          <p className={eyebrow}>Europe&rsquo;s houseplant marketplace</p>
+          <h1 className="mt-3 text-4xl font-semibold leading-[1.05] text-forest sm:text-5xl lg:text-6xl">
+            Plants that feel at home, from growers who know them best.
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+          <p className="mt-5 max-w-md text-lg text-muted">
+            Succulents and houseplants from 400+ independent sellers across Europe — delivered healthy, with the care
+            know-how to keep them that way.
           </p>
+          <div className="mt-7 flex flex-wrap gap-3">
+            <Link href="#shop" className={btnPrimary}>
+              Shop plants
+            </Link>
+            <Link href="/plant-hub" className={btnSecondary}>
+              <SproutIcon width={18} height={18} />
+              My Plant Hub
+            </Link>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <div className="grid grid-cols-5 grid-rows-2 gap-3 sm:gap-4" aria-hidden="true">
+          <div className="col-span-3 row-span-2 flex items-center rounded-[2rem] bg-mint p-4">
+            <PlantArt kind="monstera" bg="#E2F0E3" className="w-full animate-sway [transform-origin:50%_85%]" />
+          </div>
+          <div className="col-span-2 rounded-[2rem] bg-sun-soft p-3">
+            <PlantArt kind="echeveria" className="w-full" />
+          </div>
+          <div className="col-span-2 rounded-[2rem] bg-sky-soft p-3">
+            <PlantArt kind="pilea" className="w-full" />
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      {/* Trust row */}
+      <section className={`${container} py-6`} aria-label="Why shop with us">
+        <ul className="grid gap-3 text-sm sm:grid-cols-3">
+          {[
+            { icon: <TruckIcon />, title: "Plastic-free delivery", text: "EU-wide in 2–4 days, free over €35" },
+            { icon: <ShieldIcon />, title: "30-day healthy plant promise", text: "Arrives happy or we replace it" },
+            { icon: <SproutIcon />, title: "Care that continues", text: "Guides and reminders in Plant Hub" },
+          ].map((item) => (
+            <li key={item.title} className="flex items-center gap-3 rounded-2xl border border-line bg-white/70 px-4 py-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mint text-forest">
+                {item.icon}
+              </span>
+              <span>
+                <span className="block font-semibold">{item.title}</span>
+                <span className="text-muted">{item.text}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Plant Hub entry point */}
+      <section className={`${container} py-8`} aria-labelledby="hub-promo-title">
+        <div className="relative overflow-hidden rounded-[2rem] bg-forest px-6 py-9 text-white sm:px-10 sm:py-12">
+          <div className="grid items-center gap-8 md:grid-cols-[1.3fr_1fr]">
+            <div>
+              <p className="inline-flex items-center gap-2 rounded-full bg-sun px-3 py-1 text-xs font-bold uppercase tracking-wider text-ink">
+                New · Plant Hub
+              </p>
+              <h2 id="hub-promo-title" className="mt-4 text-3xl font-semibold leading-tight sm:text-4xl">
+                Plant care doesn&rsquo;t stop at checkout. Neither do we.
+              </h2>
+              <p className="mt-3 max-w-lg text-white/80">
+                Every plant you buy lands in your Plant Hub with a care guide, watering reminders and hand-picked
+                products that help it thrive.
+              </p>
+              <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/90">
+                <li className="flex items-center gap-2"><SproutIcon width={17} height={17} className="text-sun" /> Care guides for your plants</li>
+                <li className="flex items-center gap-2"><BellIcon width={17} height={17} className="text-sun" /> Watering reminders</li>
+              </ul>
+              <Link href="/plant-hub" className={`${btnSun} mt-7`}>
+                See Alex&rsquo;s plants
+                <ArrowRightIcon width={17} height={17} />
+              </Link>
+            </div>
+            <div className="flex justify-center gap-3 md:justify-end">
+              {plants.map((plant, i) => (
+                <Link
+                  key={plant.id}
+                  href={`/plant-hub/${plant.id}`}
+                  className={`w-24 rounded-2xl bg-white p-2 text-center text-ink shadow-lift transition-transform hover:-translate-y-1 sm:w-28 ${i === 1 ? "md:-translate-y-4 md:hover:-translate-y-5" : ""}`}
+                >
+                  <div className="rounded-xl" style={{ backgroundColor: plant.tint }}>
+                    <PlantArt kind={plant.art} bg={plant.tint} className="w-full p-1.5" />
+                  </div>
+                  <p className="mt-1.5 truncate text-xs font-semibold">{plant.nickname}</p>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Shop */}
+      <section id="shop" className={`${container} scroll-mt-28 py-8`} aria-labelledby="shop-title">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <p className={eyebrow}>Shop</p>
+            <h2 id="shop-title" className="mt-1 text-3xl font-semibold">
+              Popular this week
+            </h2>
+          </div>
+          <p className="text-sm text-muted">Sold and shipped by independent European growers</p>
+        </div>
+        <ul className="mt-6 grid grid-cols-1 gap-4 min-[480px]:grid-cols-2 lg:grid-cols-4">
+          {featured.map((product) => (
+            <li key={product.id}>
+              <ProductCard product={product} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    </>
   );
 }
