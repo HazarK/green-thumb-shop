@@ -25,12 +25,12 @@ export function DemoGuide() {
           id="demo-guide"
           role="dialog"
           aria-label="Demo guide"
-          className="w-[min(22rem,calc(100vw-2rem))] animate-rise rounded-3xl border border-line bg-white p-5 shadow-lift"
+          className="max-h-[calc(100dvh-10rem)] w-[min(22rem,calc(100vw-2rem))] animate-rise overflow-y-auto rounded-3xl border border-line bg-white p-5 shadow-lift"
         >
           <div className="flex items-start justify-between gap-3">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-leaf">Demo guide</p>
-              <h2 className="mt-1 text-lg font-semibold">Two flows to try</h2>
+              <h2 className="mt-1 text-lg font-semibold">Three flows to try</h2>
             </div>
             <button type="button" onClick={close} aria-label="Close demo guide" className="rounded-full p-1.5 text-muted hover:bg-cream-deep">
               <CloseIcon />
@@ -51,17 +51,32 @@ export function DemoGuide() {
             ))}
           </ol>
 
-          <p className="mt-4 text-sm font-semibold">2. Edge state — out of stock</p>
+          <p className="mt-4 text-sm font-semibold">
+            2. Edge state — sold out → &ldquo;Remind me when it&rsquo;s back&rdquo;
+          </p>
           <p className="mt-1 text-sm text-muted">
-            In the Echeveria&rsquo;s Discover More section, the Gritty Soil Mix is sold out: Add to Basket is disabled
-            and an alternative is offered.
+            In the Echeveria&rsquo;s Discover More section, the Gritty Soil Mix is sold out: Add to Basket is disabled,
+            an alternative is offered, and Alex can ask for a reminder.
           </p>
           <Link
-            href="/product/gritty-soil-mix"
+            href="/plant-hub/echeveria#discover"
             onClick={close}
             className="mt-2 inline-block text-sm font-semibold text-clay underline underline-offset-4"
           >
-            Open the out-of-stock product
+            Open the sold-out recommendation
+          </Link>
+
+          <p className="mt-4 text-sm font-semibold">3. Edge state — plant not identified yet → basic care tips</p>
+          <p className="mt-1 text-sm text-muted">
+            One of Alex&rsquo;s orders was a mixed pack with no species, so Plant Hub shows general tips and no
+            personal schedule.
+          </p>
+          <Link
+            href="/plant-hub/mixed-succulent"
+            onClick={close}
+            className="mt-2 inline-block text-sm font-semibold text-clay underline underline-offset-4"
+          >
+            Open the unidentified plant
           </Link>
 
           <div className="mt-5 flex items-center justify-between gap-3 border-t border-line pt-4">

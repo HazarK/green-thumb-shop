@@ -1,16 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import type { Plant } from "@/types";
-import { addDays, formatLongDate, todayISO } from "@/lib/dates";
+import type { IdentifiedPlant, Plant } from "@/types";
+import { purchaseDateISO } from "@/data/plants";
+import { formatLongDate } from "@/lib/dates";
 import { useDemoState } from "@/lib/store";
 import { PlantArt } from "./art/PlantArt";
 import { ArrowLeftIcon, CheckIcon, DropIcon, SproutIcon, SunIcon } from "./Icons";
 import { Recommendations } from "./Recommendations";
+import { UnidentifiedPlantProfile } from "./UnidentifiedPlantProfile";
 import { ReminderSettings } from "./ReminderSettings";
 import { card, container, eyebrow } from "./ui";
 
 export function PlantProfile({ plant }: { plant: Plant }) {
+  return plant.identified ? <IdentifiedPlantProfile plant={plant} /> : <UnidentifiedPlantProfile plant={plant} />;
+}
+
+function IdentifiedPlantProfile({ plant }: { plant: IdentifiedPlant }) {
   const state = useDemoState();
 
   const facts = [
@@ -40,7 +46,7 @@ export function PlantProfile({ plant }: { plant: Plant }) {
             <span>
               Purchased{" "}
               <strong className="text-ink">
-                {state ? formatLongDate(addDays(todayISO(), -plant.purchasedDaysAgo)) : `${plant.purchasedDaysAgo} days ago`}
+                {state ? formatLongDate(purchaseDateISO(plant)) : `${plant.purchasedDaysAgo} days ago`}
               </strong>{" "}
               from {plant.seller} · Order {plant.orderNumber}
             </span>

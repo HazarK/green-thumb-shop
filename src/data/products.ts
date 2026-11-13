@@ -53,6 +53,7 @@ export const products: Product[] = [
     inStock: false,
     alternativeId: "mineral-cactus-mix",
     restockNote: "The seller expects new stock in about 2 weeks.",
+    restockAlertBody: "Your Echeveria's soil is available again. Tap to add it to your basket.",
   },
   {
     id: "mineral-cactus-mix",

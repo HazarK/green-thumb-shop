@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { Plant, Reminder } from "@/types";
+import type { IdentifiedPlant, Reminder } from "@/types";
 import { getProduct } from "@/data/products";
 import { formatDate } from "@/lib/dates";
 import { frequencyLabel, getStatus, isDue } from "@/lib/reminders";
@@ -12,7 +12,7 @@ import { StatusChip } from "./StatusChip";
 import { btnPrimary, btnSecondary } from "./ui";
 
 interface Props {
-  plant: Plant;
+  plant: IdentifiedPlant;
   reminder: Reminder;
   canUndo: boolean;
 }

@@ -130,7 +130,7 @@ function Mister() {
   );
 }
 
-const plantKinds: PlantArtKind[] = ["echeveria", "monstera", "snake", "aloe", "haworthia", "pilea", "cactus"];
+const plantKinds: PlantArtKind[] = ["echeveria", "monstera", "snake", "aloe", "haworthia", "pilea", "cactus", "mixed"];
 
 export function ProductArt({
   kind,

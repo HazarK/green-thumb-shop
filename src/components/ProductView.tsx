@@ -3,13 +3,14 @@
 import Link from "next/link";
 import { useState } from "react";
 import type { Product } from "@/types";
-import { plants } from "@/data/plants";
+import { identifiedPlants } from "@/data/plants";
 import { getProduct } from "@/data/products";
 import { formatPrice, FREE_SHIPPING_THRESHOLD } from "@/lib/format";
-import { toggleNotify, useDemoState } from "@/lib/store";
+import { useDemoState } from "@/lib/store";
 import { AddToBasketButton } from "./AddToBasketButton";
 import { ProductArt } from "./art/ProductArt";
-import { AlertIcon, ArrowLeftIcon, ArrowRightIcon, BellIcon, CheckIcon, SproutIcon, StarIcon, TruckIcon } from "./Icons";
+import { AlertIcon, ArrowLeftIcon, ArrowRightIcon, CheckIcon, SproutIcon, StarIcon, TruckIcon } from "./Icons";
+import { RestockReminderButton, RestockReminderStatus } from "./RestockReminder";
 import { StockBadge } from "./StockBadge";
 import { btnSecondary, card, container } from "./ui";
 
@@ -17,11 +18,10 @@ export function ProductView({ product }: { product: Product }) {
   const state = useDemoState();
   const [qty, setQty] = useState(1);
   const inBasket = state?.basket[product.id] ?? 0;
-  const notifying = state?.notifyWhenBack.includes(product.id) ?? false;
   const alternative = product.alternativeId ? getProduct(product.alternativeId) : undefined;
 
   // Rule-based personalisation: is this product recommended for a plant Alex owns?
-  const match = plants
+  const match = identifiedPlants
     .map((plant) => ({ plant, rec: plant.recommendations.find((r) => r.productId === product.id) }))
     .find((m) => m.rec);
 
@@ -141,21 +141,9 @@ export function ProductView({ product }: { product: Product }) {
               </div>
               <div className="mt-4 flex flex-wrap gap-3">
                 <AddToBasketButton product={product} describedBy="stock-explanation" className="min-w-52 !py-3.5" />
-                <button
-                  type="button"
-                  onClick={() => toggleNotify(product.id)}
-                  aria-pressed={notifying}
-                  className={`${btnSecondary} !py-3.5 ${notifying ? "!border-leaf !bg-mint" : ""}`}
-                >
-                  {notifying ? <CheckIcon width={17} height={17} strokeWidth={2.6} /> : <BellIcon width={17} height={17} />}
-                  {notifying ? "We'll let you know" : "Notify me when it's back"}
-                </button>
+                <RestockReminderButton product={product} className="!py-3.5" />
               </div>
-              {notifying && (
-                <p role="status" className="mt-2 text-sm text-muted">
-                  Done. In the live product Alex would get an email when it&rsquo;s back (simulated here).
-                </p>
-              )}
+              <RestockReminderStatus product={product} className="mt-4" />
 
               {alternative && (
                 <section aria-labelledby="alternative-title" data-testid="alternative" className="mt-6 rounded-3xl border-2 border-leaf/40 bg-white p-4 shadow-card sm:p-5">

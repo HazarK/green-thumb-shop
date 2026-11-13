@@ -1,4 +1,5 @@
-import type { Plant } from "@/types";
+import type { IdentifiedPlant, Plant } from "@/types";
+import { addDays, todayISO } from "@/lib/dates";
 
 /**
  * Alex's fictional purchase history. In production this would come from
@@ -8,6 +9,7 @@ export const plants: Plant[] = [
   {
     id: "echeveria",
     commonName: "Mexican Snowball",
+    identified: true,
     botanicalName: "Echeveria elegans",
     nickname: "Echeveria",
     art: "echeveria",
@@ -63,6 +65,7 @@ export const plants: Plant[] = [
   {
     id: "monstera",
     commonName: "Swiss Cheese Plant",
+    identified: true,
     botanicalName: "Monstera deliciosa",
     nickname: "Monstera",
     art: "monstera",
@@ -118,6 +121,7 @@ export const plants: Plant[] = [
   {
     id: "snake-plant",
     commonName: "Snake Plant",
+    identified: true,
     botanicalName: "Dracaena trifasciata",
     nickname: "Snake Plant",
     art: "snake",
@@ -170,6 +174,35 @@ export const plants: Plant[] = [
       },
     ],
   },
+  {
+    // Edge case: the order line is a mixed pack, so there is no species to match.
+    id: "mixed-succulent",
+    identified: false,
+    commonName: "Mixed succulent",
+    nickname: "Mixed succulent",
+    art: "mixed",
+    tint: "#F1EADB",
+    purchasedOn: "2026-11-01",
+    orderNumber: "GT-50377",
+    seller: "Kaktus Kollektiv",
+    orderItemName: "Succulent surprise trio (mixed)",
+    notice:
+      "We couldn't match this plant to a care guide yet, so here are general succulent care tips. Full guide coming soon.",
+    basicTips: [
+      { icon: "water", title: "Watering", text: "Water only when the soil is completely dry." },
+      { icon: "light", title: "Sunlight", text: "Give it bright light with some direct sun." },
+      { icon: "soil", title: "Pot and soil", text: "Use a free-draining pot and soil." },
+      { icon: "season", title: "Winter", text: "Water less often in the cold, dark months." },
+    ],
+    reminderNote: "Personal reminders start once we've identified this plant.",
+  },
 ];
+
+/** Plants with a matched species: only these get schedules and recommendations. */
+export const identifiedPlants = plants.filter((p): p is IdentifiedPlant => p.identified);
+
+/** Purchase date as a local YYYY-MM-DD string. */
+export const purchaseDateISO = (plant: Plant) =>
+  plant.identified ? addDays(todayISO(), -plant.purchasedDaysAgo) : plant.purchasedOn;
 
 export const getPlant = (id: string) => plants.find((p) => p.id === id);

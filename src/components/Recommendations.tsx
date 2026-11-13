@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import type { Plant } from "@/types";
+import type { IdentifiedPlant } from "@/types";
 import { getProduct } from "@/data/products";
 import { formatPrice } from "@/lib/format";
 import { AddToBasketButton } from "./AddToBasketButton";
 import { ProductArt } from "./art/ProductArt";
 import { AlertIcon } from "./Icons";
+import { RestockReminderButton, RestockReminderStatus } from "./RestockReminder";
 import { StockBadge } from "./StockBadge";
 import { btnSecondary, eyebrow } from "./ui";
 
 /** "Discover More": rule-based product picks for one owned plant. */
-export function Recommendations({ plant }: { plant: Plant }) {
+export function Recommendations({ plant }: { plant: IdentifiedPlant }) {
   const items = plant.recommendations
     .map((rec) => ({ rec, product: getProduct(rec.productId) }))
     .filter((i) => i.product);
@@ -86,11 +87,13 @@ export function Recommendations({ plant }: { plant: Plant }) {
                 )}
 
                 <div className="mt-auto flex flex-wrap gap-2 px-1 pb-1 pt-4">
-                  <AddToBasketButton product={p} compact describedBy={noteId} className="flex-1" />
+                  <AddToBasketButton product={p} compact describedBy={noteId} className="flex-1 whitespace-nowrap" />
+                  {!p.inStock && <RestockReminderButton product={p} className="whitespace-nowrap !px-4 !py-2.5" />}
                   <Link href={`/product/${p.id}`} className={`${btnSecondary} !px-4 !py-2.5`}>
                     Details
                   </Link>
                 </div>
+                {!p.inStock && <RestockReminderStatus product={p} className="px-1 pb-1 pt-3" />}
               </article>
             </li>
           );

@@ -5,7 +5,8 @@ export type PlantArtKind =
   | "aloe"
   | "haworthia"
   | "pilea"
-  | "cactus";
+  | "cactus"
+  | "mixed";
 
 export type ProductArtKind =
   | "bottle"
@@ -27,16 +28,21 @@ export interface Recommendation {
   reason: string;
 }
 
-export interface Plant {
+interface PlantBase {
   id: string;
   commonName: string;
-  botanicalName: string;
   nickname: string;
   art: PlantArtKind;
   tint: string;
-  purchasedDaysAgo: number;
   orderNumber: string;
   seller: string;
+}
+
+/** A purchased plant we matched to a species, with a full care guide. */
+export interface IdentifiedPlant extends PlantBase {
+  identified: true;
+  botanicalName: string;
+  purchasedDaysAgo: number;
   difficulty: "Easy" | "Moderate";
   intro: string;
   watering: CareFact;
@@ -49,6 +55,28 @@ export interface Plant {
   seedLastWateredDaysAgo: number;
   recommendations: Recommendation[];
 }
+
+export interface BasicTip {
+  icon: "water" | "light" | "soil" | "season";
+  title: string;
+  text: string;
+}
+
+/**
+ * A purchased plant whose order line has no reliable species (e.g. a mixed
+ * pack). It gets general tips only: no schedule and no recommendations.
+ */
+export interface UnidentifiedPlant extends PlantBase {
+  identified: false;
+  /** Local date, YYYY-MM-DD */
+  purchasedOn: string;
+  orderItemName: string;
+  notice: string;
+  basicTips: BasicTip[];
+  reminderNote: string;
+}
+
+export type Plant = IdentifiedPlant | UnidentifiedPlant;
 
 export interface Product {
   id: string;
@@ -70,6 +98,8 @@ export interface Product {
   /** Suggested substitute shown when this product is out of stock. */
   alternativeId?: string;
   restockNote?: string;
+  /** Body of the simulated "back in stock" notification. */
+  restockAlertBody?: string;
   featured?: boolean;
 }
 

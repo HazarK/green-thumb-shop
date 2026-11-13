@@ -1,7 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { plants } from "@/data/plants";
+import { identifiedPlants } from "@/data/plants";
 import { getProduct } from "@/data/products";
 import type { Reminder } from "@/types";
 import { todayISO } from "./dates";
@@ -33,7 +33,7 @@ export interface DemoState {
 function seedState(): DemoState {
   return {
     basket: {},
-    reminders: Object.fromEntries(plants.map((p) => [p.id, seedReminder(p)])),
+    reminders: Object.fromEntries(identifiedPlants.map((p) => [p.id, seedReminder(p)])),
     undo: {},
     wateringsLogged: 7,
     notifyWhenBack: [],
@@ -173,13 +173,12 @@ export function updateReminder(plantId: string, patch: Partial<Reminder>) {
 
 /* ---------- Misc ---------- */
 
-export function toggleNotify(productId: string) {
-  update((s) => ({
-    ...s,
-    notifyWhenBack: s.notifyWhenBack.includes(productId)
-      ? s.notifyWhenBack.filter((id) => id !== productId)
-      : [...s.notifyWhenBack, productId],
-  }));
+/** Set or cancel a back-in-stock reminder for a sold-out product. */
+export function setRestockReminder(productId: string, on: boolean) {
+  update((s) => {
+    const others = s.notifyWhenBack.filter((id) => id !== productId);
+    return { ...s, notifyWhenBack: on ? [...others, productId] : others };
+  });
 }
 
 export function resetDemo() {

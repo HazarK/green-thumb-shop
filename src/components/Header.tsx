@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { plants } from "@/data/plants";
+import { identifiedPlants } from "@/data/plants";
 import { getStatus, isDue } from "@/lib/reminders";
 import { basketCount, useDemoState } from "@/lib/store";
 import { BasketIcon, Logo } from "./Icons";
@@ -13,7 +13,7 @@ export function Header() {
   const state = useDemoState();
   const count = basketCount(state);
   const dueCount = state
-    ? plants.filter((p) => isDue(getStatus(state.reminders[p.id]))).length
+    ? identifiedPlants.filter((p) => isDue(getStatus(state.reminders[p.id]))).length
     : 0;
 
   const onShop = pathname === "/" || pathname.startsWith("/product");

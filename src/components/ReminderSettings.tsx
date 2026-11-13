@@ -1,6 +1,6 @@
 "use client";
 
-import type { Plant, Reminder } from "@/types";
+import type { IdentifiedPlant, Reminder } from "@/types";
 import { addDays, formatDate } from "@/lib/dates";
 import { FREQUENCY_OPTIONS, frequencyLabel, getStatus, isDue } from "@/lib/reminders";
 import { markWatered, showToast, undoWatered, updateReminder } from "@/lib/store";
@@ -10,7 +10,7 @@ import { StatusChip } from "./StatusChip";
 import { btnPrimary, card, eyebrow } from "./ui";
 
 interface Props {
-  plant: Plant;
+  plant: IdentifiedPlant;
   reminder: Reminder;
   canUndo: boolean;
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { plants } from "@/data/plants";
+import { identifiedPlants } from "@/data/plants";
 import { formatDate } from "@/lib/dates";
 import { getStatus, isDue } from "@/lib/reminders";
 import { useDemoState } from "@/lib/store";
@@ -21,7 +21,7 @@ export function HomeReminderBanner() {
     );
   }
 
-  const ranked = plants
+  const ranked = identifiedPlants
     .map((plant) => ({ plant, status: getStatus(state.reminders[plant.id]) }))
     .filter((r) => r.status.state !== "off")
     .sort((a, b) => a.status.daysUntil - b.status.daysUntil);

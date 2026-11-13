@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { plants } from "@/data/plants";
+import { identifiedPlants, plants, purchaseDateISO } from "@/data/plants";
 import { getProduct } from "@/data/products";
 import { addDays, formatDate, todayISO } from "@/lib/dates";
 import { getStatus, isDue } from "@/lib/reminders";
@@ -34,9 +34,11 @@ export function PlantHubDashboard() {
   const state = useDemoState();
   if (!state) return <DashboardSkeleton />;
 
-  const statuses = plants.map((plant) => ({ plant, status: getStatus(state.reminders[plant.id]) }));
+  const statuses = identifiedPlants.map((plant) => ({ plant, status: getStatus(state.reminders[plant.id]) }));
+  const unidentified = plants.filter((plant) => !plant.identified);
+  const waitingFor = state.notifyWhenBack.map((id) => getProduct(id)).filter((p) => p !== undefined);
   const dueCount = statuses.filter((s) => isDue(s.status)).length;
-  const picks = plants
+  const picks = identifiedPlants
     .map((plant) => ({ plant, rec: plant.recommendations[0], product: getProduct(plant.recommendations[0].productId) }))
     .filter((p) => p.product);
 
@@ -62,7 +64,7 @@ export function PlantHubDashboard() {
             <DropIcon className="text-sky" /> Care reminders
           </h2>
           <ul className="mt-4 space-y-3">
-            {plants.map((plant) => (
+            {identifiedPlants.map((plant) => (
               <ReminderCard
                 key={plant.id}
                 plant={plant}
@@ -70,7 +72,44 @@ export function PlantHubDashboard() {
                 canUndo={Boolean(state.undo[plant.id])}
               />
             ))}
+            {unidentified.map((plant) => (
+              <li key={plant.id} data-testid={`reminder-${plant.id}`} data-state="unavailable">
+                <Link
+                  href={`/plant-hub/${plant.id}`}
+                  className="flex items-center gap-4 rounded-3xl border border-dashed border-line bg-white/60 p-4 hover:bg-white sm:p-5"
+                >
+                  <span className="h-12 w-12 shrink-0 overflow-hidden rounded-2xl" style={{ backgroundColor: plant.tint }}>
+                    <PlantArt kind={plant.art} bg={plant.tint} className="h-full w-full p-1" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-sm">
+                    <span className="block font-semibold">{plant.commonName}</span>
+                    <span className="text-muted">{plant.reminderNote}</span>
+                  </span>
+                  <ArrowRightIcon width={17} height={17} className="shrink-0 text-muted" />
+                </Link>
+              </li>
+            ))}
           </ul>
+          {waitingFor.length > 0 && (
+            <p
+              data-testid="restock-alerts"
+              className="mt-3 flex animate-rise items-start gap-2.5 rounded-2xl bg-sky-soft px-4 py-3 text-sm text-ink"
+            >
+              <BellIcon width={17} height={17} className="mt-0.5 shrink-0 text-sky" />
+              <span>
+                <span className="font-semibold">Back-in-stock alerts:</span>{" "}
+                {waitingFor.map((product, i) => (
+                  <span key={product.id}>
+                    {i > 0 && ", "}
+                    <Link href={`/product/${product.id}`} className="underline underline-offset-4 hover:text-sky">
+                      {product.name.split(",")[0]}
+                    </Link>
+                  </span>
+                ))}
+                <span className="text-muted"> — we&rsquo;ll remind you when {waitingFor.length === 1 ? "it's" : "they're"} back.</span>
+              </span>
+            </p>
+          )}
         </section>
 
         {/* How reminders bring Alex back */}
@@ -123,7 +162,7 @@ export function PlantHubDashboard() {
           <p className="text-sm text-muted">Added automatically from your Green Thumb Shop orders</p>
         </div>
         <ul className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {statuses.map(({ plant, status }) => (
+          {plants.map((plant) => (
             <li key={plant.id}>
               <Link
                 href={`/plant-hub/${plant.id}`}
@@ -137,20 +176,35 @@ export function PlantHubDashboard() {
                     className="mx-auto aspect-square w-full max-w-[16rem] p-5 transition-transform duration-300 group-hover:scale-[1.04]"
                   />
                   <span className="absolute left-3 top-3">
-                    <StatusChip status={status} />
+                    {plant.identified ? (
+                      <StatusChip status={getStatus(state.reminders[plant.id])} />
+                    ) : (
+                      <span className="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-bold text-muted ring-1 ring-line">
+                        Not identified yet
+                      </span>
+                    )}
                   </span>
                 </div>
                 <div className="flex flex-1 flex-col px-2 pb-2 pt-4">
                   <h3 className="text-xl font-semibold">{plant.commonName}</h3>
-                  <p className="text-sm italic text-muted">{plant.botanicalName}</p>
-                  <ul className="mt-3 space-y-1.5 text-sm text-ink/85">
-                    <li className="flex gap-2"><DropIcon width={16} height={16} className="mt-0.5 shrink-0 text-sky" /> {plant.watering.summary}</li>
-                    <li className="flex gap-2"><SunIcon width={16} height={16} className="mt-0.5 shrink-0 text-[#C99A10]" /> {plant.sunlight.summary}</li>
-                  </ul>
+                  {plant.identified ? (
+                    <>
+                      <p className="text-sm italic text-muted">{plant.botanicalName}</p>
+                      <ul className="mt-3 space-y-1.5 text-sm text-ink/85">
+                        <li className="flex gap-2"><DropIcon width={16} height={16} className="mt-0.5 shrink-0 text-sky" /> {plant.watering.summary}</li>
+                        <li className="flex gap-2"><SunIcon width={16} height={16} className="mt-0.5 shrink-0 text-[#C99A10]" /> {plant.sunlight.summary}</li>
+                      </ul>
+                    </>
+                  ) : (
+                    <>
+                      <p className="text-sm text-muted">From your order: {plant.orderItemName}</p>
+                      <p className="mt-3 text-sm text-ink/85">General succulent care tips for now. Full guide coming soon.</p>
+                    </>
+                  )}
                   <span className="mt-auto flex items-center justify-between pt-4 text-sm">
-                    <span className="text-muted">Bought {formatDate(addDays(todayISO(), -plant.purchasedDaysAgo))}</span>
+                    <span className="text-muted">Bought {formatDate(purchaseDateISO(plant))}</span>
                     <span className="flex items-center gap-1 font-semibold text-forest">
-                      Care guide <ArrowRightIcon width={16} height={16} className="transition-transform group-hover:translate-x-0.5" />
+                      {plant.identified ? "Care guide" : "Care tips"} <ArrowRightIcon width={16} height={16} className="transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </span>
                 </div>

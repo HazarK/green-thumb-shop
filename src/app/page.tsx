@@ -4,7 +4,7 @@ import { HomeReminderBanner } from "@/components/HomeReminderBanner";
 import { ArrowRightIcon, BellIcon, ShieldIcon, SproutIcon, TruckIcon } from "@/components/Icons";
 import { ProductCard } from "@/components/ProductCard";
 import { btnPrimary, btnSecondary, btnSun, container, eyebrow } from "@/components/ui";
-import { plants } from "@/data/plants";
+import { identifiedPlants } from "@/data/plants";
 import { products } from "@/data/products";
 
 export default function HomePage() {
@@ -94,7 +94,7 @@ export default function HomePage() {
               </Link>
             </div>
             <div className="flex justify-center gap-3 md:justify-end">
-              {plants.map((plant, i) => (
+              {identifiedPlants.map((plant, i) => (
                 <Link
                   key={plant.id}
                   href={`/plant-hub/${plant.id}`}

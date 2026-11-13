@@ -1,4 +1,4 @@
-import type { Plant, Reminder } from "@/types";
+import type { IdentifiedPlant, Reminder } from "@/types";
 import { addDays, daysBetween, formatDate, todayISO } from "./dates";
 
 export type DueState = "overdue" | "today" | "soon" | "later" | "off";
@@ -12,7 +12,7 @@ export interface ReminderStatus {
   wateredToday: boolean;
 }
 
-export function seedReminder(plant: Plant): Reminder {
+export function seedReminder(plant: IdentifiedPlant): Reminder {
   return {
     enabled: true,
     frequencyDays: plant.defaultFrequencyDays,

@@ -260,6 +260,56 @@ function Cactus() {
   );
 }
 
+function MixedSucculents() {
+  const petals = [
+    { r: -78, len: 30, fill: "#6FA690" }, { r: 78, len: 30, fill: "#6FA690" },
+    { r: -52, len: 34, fill: "#86B8A1" }, { r: 52, len: 34, fill: "#86B8A1" },
+    { r: -26, len: 34, fill: "#A2CDB6" }, { r: 26, len: 34, fill: "#A2CDB6" },
+    { r: 0, len: 30, fill: "#BFDFCB" },
+  ];
+  return (
+    <g>
+      {/* small barrel cactus */}
+      <ellipse cx="141" cy="128" rx="19" ry="23" fill="#4C8C5C" />
+      {[13, 5].map((rx) => (
+        <ellipse key={rx} cx="141" cy="128" rx={rx} ry="23" fill="none" stroke="#2F6B4A" strokeWidth="1.6" />
+      ))}
+      {[-14, -5, 5, 14].map((dx) =>
+        [-10, 3].map((dy) => (
+          <path
+            key={`${dx}-${dy}`}
+            d={`M${141 + dx - 2.5},${126 + dy - 2} l5,4 m0,-4 l-5,4`}
+            stroke="#F1CE55"
+            strokeWidth="1.4"
+            strokeLinecap="round"
+            fill="none"
+          />
+        )),
+      )}
+      <ellipse cx="141" cy="106" rx="6" ry="2.5" fill="#F4C542" />
+      {/* small striped haworthia */}
+      {[-48, -24, 0, 24, 48].map((r, i) => (
+        <g key={r} transform={`translate(60 152) rotate(${r})`}>
+          <path d={swordPath(i === 2 ? 50 : 42, 13)} fill="#2C6646" stroke="#1F4D36" strokeWidth="1.2" />
+          {[14, 23, 32].map((y) => (
+            <path key={y} d={`M-3,${-y} L3,${-y}`} stroke="#F3F7EE" strokeWidth="1.8" strokeLinecap="round" />
+          ))}
+        </g>
+      ))}
+      {/* rosette, seen from the side */}
+      <g transform="translate(100 152)">
+        {petals.map((p) => (
+          <g key={p.r} transform={`rotate(${p.r})`}>
+            <path d={petalPath(p.len, 20)} fill={p.fill} stroke="#5A8F7A" strokeWidth="1" />
+            <circle cx="0" cy={-p.len + 2} r="1.7" fill="#D98C8C" opacity="0.85" />
+          </g>
+        ))}
+      </g>
+      <Pot top={148} width={124} height={40} />
+    </g>
+  );
+}
+
 export function PlantArt({ kind, bg = "#E4F0E2", className }: { kind: PlantArtKind; bg?: string; className?: string }) {
   return (
     <svg viewBox="0 0 200 200" className={className} aria-hidden="true" focusable="false">
@@ -270,6 +320,7 @@ export function PlantArt({ kind, bg = "#E4F0E2", className }: { kind: PlantArtKi
       {kind === "haworthia" && <Spiky variant="haworthia" />}
       {kind === "pilea" && <Pilea />}
       {kind === "cactus" && <Cactus />}
+      {kind === "mixed" && <MixedSucculents />}
     </svg>
   );
 }
