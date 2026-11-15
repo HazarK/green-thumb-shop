@@ -9,7 +9,7 @@ import { formatPrice, FREE_SHIPPING_THRESHOLD } from "@/lib/format";
 import { useDemoState } from "@/lib/store";
 import { AddToBasketButton } from "./AddToBasketButton";
 import { ProductArt } from "./art/ProductArt";
-import { AlertIcon, ArrowLeftIcon, ArrowRightIcon, CheckIcon, SproutIcon, StarIcon, TruckIcon } from "./Icons";
+import { AlertIcon, ArrowLeftIcon, ArrowRightIcon, CheckIcon, SproutIcon, StarIcon, SunIcon, TruckIcon } from "./Icons";
 import { RestockReminderButton, RestockReminderStatus } from "./RestockReminder";
 import { StockBadge } from "./StockBadge";
 import { btnSecondary, card, container } from "./ui";
@@ -24,6 +24,11 @@ export function ProductView({ product }: { product: Product }) {
   const match = identifiedPlants
     .map((plant) => ({ plant, rec: plant.recommendations.find((r) => r.productId === product.id) }))
     .find((m) => m.rec);
+
+  // Seasonal advice for a product that suits an owned plant but isn't needed right now.
+  const seasonal = identifiedPlants
+    .map((plant) => ({ plant, entry: plant.seasonalNotes?.find((n) => n.productId === product.id) }))
+    .find((s) => s.entry);
 
   return (
     <div className={`${container} py-6 sm:py-8`}>
@@ -80,6 +85,18 @@ export function ProductView({ product }: { product: Product }) {
               <SproutIcon className="mt-0.5 shrink-0" />
               <span>
                 <strong>Recommended for your {match.plant.nickname}.</strong> {match.rec!.reason}
+              </span>
+            </p>
+          )}
+
+          {!match && seasonal && (
+            <p
+              data-testid="seasonal-note"
+              className="mt-5 flex gap-3 rounded-2xl border border-sun bg-sun-soft px-4 py-3.5 text-sm leading-relaxed text-ink"
+            >
+              <SunIcon className="mt-0.5 shrink-0 text-[#8A6600]" />
+              <span>
+                <strong>For your {seasonal.plant.nickname}:</strong> {seasonal.entry!.note}
               </span>
             </p>
           )}

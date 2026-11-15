@@ -9,7 +9,7 @@ const happyPath = [
   { label: "See Alex's care reminder on the home page", href: "/" },
   { label: "Open Plant Hub and view My Plants", href: "/plant-hub" },
   { label: "Open the Echeveria: care guide and reminder", href: "/plant-hub/echeveria" },
-  { label: "Discover More → open the recommended feed", href: "/product/succulent-feed" },
+  { label: "Discover More → open the recommended grow light", href: "/product/led-grow-light" },
   { label: "Add it to the basket, then view the basket", href: "/basket" },
 ];
 

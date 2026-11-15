@@ -17,7 +17,7 @@ export const products: Product[] = [
     label: "2-7-7",
     short: "Low-nitrogen feed for compact, colourful succulents.",
     description:
-      "A gentle, low-nitrogen liquid fertilizer formulated for succulents and cacti. Supports firm growth and strong colour without making plants stretch. One bottle lasts a small collection a full growing season.",
+      "A gentle, low-nitrogen liquid fertilizer formulated for succulents and cacti. Supports firm growth and strong colour without making plants stretch. One bottle lasts a small collection from April to September.",
     details: [
       "NPK 2-7-7 with added calcium and magnesium",
       "Dilute 5 ml per litre of water — half that for young plants",
@@ -27,6 +27,29 @@ export const products: Product[] = [
     ],
     inStock: true,
     featured: true,
+  },
+  {
+    id: "led-grow-light",
+    name: "Clip-on LED Grow Light, full spectrum",
+    category: "Pots & tools",
+    price: 24.9,
+    seller: "Nordic Green Studio",
+    sellerLocation: "Copenhagen, Denmark",
+    rating: 4.7,
+    reviews: 208,
+    art: "grow-light",
+    tint: "#FBEFC4",
+    short: "Full-spectrum clip-on lamp for dark windowsills and short days.",
+    description:
+      "A compact, full-spectrum LED lamp that clips onto a shelf or windowsill. It tops up natural daylight in the darker months, so sun-loving plants stay compact and keep their colour instead of stretching towards the window.",
+    details: [
+      "Full-spectrum white LED, 10 W, with a warm daylight tone",
+      "Flexible neck and padded clip for shelves up to 5 cm thick",
+      "Built-in timer: 4, 8 or 12 hours a day",
+      "Position 20–30 cm above the plant",
+      "USB powered, EU plug adapter included",
+    ],
+    inStock: true,
   },
   {
     id: "gritty-soil-mix",
@@ -140,7 +163,7 @@ export const products: Product[] = [
     label: "5-3-6",
     short: "Balanced organic feed for leafy green houseplants.",
     description:
-      "A balanced, plant-based liquid fertilizer for foliage houseplants. Encourages steady, healthy leaf growth through the growing season with no synthetic additives.",
+      "A balanced, plant-based liquid fertilizer for foliage houseplants. Encourages steady, healthy leaf growth from spring to early autumn with no synthetic additives.",
     details: [
       "NPK 5-3-6 from plant-based sources",
       "Dilute 10 ml per litre of water",

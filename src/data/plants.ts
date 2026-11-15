@@ -47,9 +47,9 @@ export const plants: Plant[] = [
     seedReminderOnDaysAgo: 22,
     recommendations: [
       {
-        productId: "succulent-feed",
+        productId: "led-grow-light",
         reason:
-          "Your Echeveria is in its growing season. A low-nitrogen feed once a month keeps the rosette compact and colourful.",
+          "Days are short until March. Extra light keeps your Echeveria compact instead of stretching towards the window.",
       },
       {
         productId: "gritty-soil-mix",
@@ -61,6 +61,9 @@ export const plants: Plant[] = [
         reason:
           "Terracotta breathes and dries quickly — the easiest way to avoid overwatering a succulent.",
       },
+    ],
+    seasonalNotes: [
+      { productId: "succulent-feed", note: "Start feeding in April. Not needed in autumn and winter." },
     ],
   },
   {
@@ -108,15 +111,18 @@ export const plants: Plant[] = [
           "Monsteras are climbers. A moss pole supports the stems and encourages bigger, more fenestrated leaves.",
       },
       {
-        productId: "houseplant-feed",
+        productId: "led-grow-light",
         reason:
-          "A balanced feed every 4 weeks supports the new leaves your Monstera pushes out in the growing season.",
+          "Days are short until March. Extra light helps new leaves keep their size and splits through the darker months.",
       },
       {
         productId: "mister",
         reason:
           "A fine mist makes it easy to keep the moss pole damp and to wipe dust off those large leaves.",
       },
+    ],
+    seasonalNotes: [
+      { productId: "houseplant-feed", note: "Start feeding in March. Not needed in late autumn and winter." },
     ],
   },
   {

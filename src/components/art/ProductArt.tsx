@@ -130,6 +130,45 @@ function Mister() {
   );
 }
 
+function GrowLight() {
+  return (
+    <g>
+      <Shadow rx={56} />
+      {/* light cone */}
+      <path d="M76,62 L150,44 L172,150 L62,150 Z" fill="#F4C542" opacity="0.28" />
+      <path d="M92,62 L138,50 L150,150 L92,150 Z" fill="#F4C542" opacity="0.22" />
+      {/* shelf and clip */}
+      <rect x="18" y="150" width="164" height="10" rx="3" fill="#B8923E" />
+      <path d="M30,138 L56,138 L56,172 L30,172 Q26,172 26,168 L26,142 Q26,138 30,138 Z" fill={FOREST} />
+      <rect x="36" y="150" width="22" height="10" fill="#B8923E" />
+      {/* flexible neck */}
+      <path d="M41,138 C36,96 52,58 96,50" stroke={FOREST} strokeWidth="7" fill="none" strokeLinecap="round" />
+      <path d="M41,138 C36,96 52,58 96,50" stroke="#fff" strokeOpacity="0.25" strokeWidth="2" strokeDasharray="1 7" fill="none" strokeLinecap="round" />
+      {/* lamp head */}
+      <g transform="rotate(-14 118 46)">
+        <rect x="76" y="34" width="84" height="22" rx="11" fill={FOREST} />
+        <rect x="84" y="50" width="68" height="7" rx="3.5" fill="#FBEFC4" />
+      </g>
+      {/* a small succulent under the light */}
+      <g transform="translate(120 150)">
+        {[-64, -38, -13, 13, 38, 64].map((r) => (
+          <path
+            key={r}
+            transform={`rotate(${r} 0 -18)`}
+            d="M0,-18 C9,-28 8,-42 0,-46 C-8,-42 -9,-28 0,-18 Z"
+            fill={Math.abs(r) > 30 ? "#6FA690" : "#A2CDB6"}
+            stroke="#5A8F7A"
+            strokeWidth="1"
+          />
+        ))}
+        <path d="M-22,-20 L22,-20 L17,-1 Q16,2 13,2 L-13,2 Q-16,2 -17,-1 Z" fill="#C8744F" />
+        <rect x="-25" y="-24" width="50" height="8" rx="3" fill="#C8744F" />
+        <rect x="-25" y="-19" width="50" height="3" rx="1.5" fill="#A95B3A" opacity="0.45" />
+      </g>
+    </g>
+  );
+}
+
 const plantKinds: PlantArtKind[] = ["echeveria", "monstera", "snake", "aloe", "haworthia", "pilea", "cactus", "mixed"];
 
 export function ProductArt({
@@ -156,6 +195,7 @@ export function ProductArt({
       {kind === "moss-pole" && <MossPole />}
       {kind === "watering-can" && <WateringCan />}
       {kind === "mister" && <Mister />}
+      {kind === "grow-light" && <GrowLight />}
     </svg>
   );
 }

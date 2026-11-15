@@ -15,6 +15,7 @@ export type ProductArtKind =
   | "moss-pole"
   | "watering-can"
   | "mister"
+  | "grow-light"
   | PlantArtKind;
 
 export interface CareFact {
@@ -59,6 +60,11 @@ export interface IdentifiedPlant extends PlantBase {
    */
   seedReminderOnDaysAgo?: number;
   recommendations: Recommendation[];
+  /**
+   * Seasonal advice for products that suit this plant but are not needed right
+   * now (e.g. fertilizer outside the feeding months). Shown on the product page.
+   */
+  seasonalNotes?: { productId: string; note: string }[];
 }
 
 export interface BasicTip {
