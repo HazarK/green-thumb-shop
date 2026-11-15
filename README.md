@@ -9,7 +9,8 @@ European plant marketplace Green Thumb Shop.
 
 - **Marketplace home** with a personal care reminder for Alex, the demo customer
 - **Plant Hub → My Plants**: Alex's previously purchased plants with care guides
-- **Care reminders**: configurable watering frequency, mark as watered, undo, visual feedback
+- **Care reminders**: one optional, opt-in watering reminder per identified plant (on for the Echeveria,
+  off for the others by default), configurable frequency, mark as watered, undo, visual feedback
 - **Discover More**: rule-based product recommendations per owned plant
 - **Basket**: add, change quantity, remove, totals, simulated checkout
 - **Edge state — sold out**: an out-of-stock recommendation with a disabled Add to Basket, a suggested

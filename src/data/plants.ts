@@ -44,6 +44,7 @@ export const plants: Plant[] = [
     ],
     defaultFrequencyDays: 14,
     seedLastWateredDaysAgo: 14,
+    seedReminderOnDaysAgo: 22,
     recommendations: [
       {
         productId: "succulent-feed",

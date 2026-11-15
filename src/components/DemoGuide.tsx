@@ -31,6 +31,10 @@ export function DemoGuide() {
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.14em] text-leaf">Demo guide</p>
               <h2 className="mt-1 text-lg font-semibold">Three flows to try</h2>
+              <p className="mt-1.5 text-xs leading-relaxed text-muted">
+                You&rsquo;re seeing the Plant Hub test group. In the pilot, a control group sees today&rsquo;s site with
+                no Plant Hub.
+              </p>
             </div>
             <button type="button" onClick={close} aria-label="Close demo guide" className="rounded-full p-1.5 text-muted hover:bg-cream-deep">
               <CloseIcon />

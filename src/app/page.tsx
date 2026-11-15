@@ -4,7 +4,7 @@ import { HomeReminderBanner } from "@/components/HomeReminderBanner";
 import { ArrowRightIcon, BellIcon, ShieldIcon, SproutIcon, TruckIcon } from "@/components/Icons";
 import { ProductCard } from "@/components/ProductCard";
 import { btnPrimary, btnSecondary, btnSun, container, eyebrow } from "@/components/ui";
-import { identifiedPlants } from "@/data/plants";
+import { plants } from "@/data/plants";
 import { products } from "@/data/products";
 
 export default function HomePage() {
@@ -54,7 +54,7 @@ export default function HomePage() {
           {[
             { icon: <TruckIcon />, title: "Plastic-free delivery", text: "EU-wide in 2–4 days, free over €35" },
             { icon: <ShieldIcon />, title: "30-day healthy plant promise", text: "Arrives happy or we replace it" },
-            { icon: <SproutIcon />, title: "Care that continues", text: "Guides and reminders in Plant Hub" },
+            { icon: <SproutIcon />, title: "Care that continues", text: "Care guides and optional reminders in Plant Hub" },
           ].map((item) => (
             <li key={item.title} className="flex items-center gap-3 rounded-2xl border border-line bg-white/70 px-4 py-3">
               <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-mint text-forest">
@@ -81,27 +81,33 @@ export default function HomePage() {
                 Plant care doesn&rsquo;t stop at checkout. Neither do we.
               </h2>
               <p className="mt-3 max-w-lg text-white/80">
-                Every plant you buy lands in your Plant Hub with a care guide, watering reminders and hand-picked
-                products that help it thrive.
+                Plants you buy appear in your Plant Hub. The ones we can identify get a care guide and up to 3
+                hand-picked products. Turn on a watering reminder if you&rsquo;d like one.
               </p>
               <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm text-white/90">
                 <li className="flex items-center gap-2"><SproutIcon width={17} height={17} className="text-sun" /> Care guides for your plants</li>
-                <li className="flex items-center gap-2"><BellIcon width={17} height={17} className="text-sun" /> Watering reminders</li>
+                <li className="flex items-center gap-2"><BellIcon width={17} height={17} className="text-sun" /> Optional watering reminders</li>
               </ul>
               <Link href="/plant-hub" className={`${btnSun} mt-7`}>
                 See Alex&rsquo;s plants
                 <ArrowRightIcon width={17} height={17} />
               </Link>
             </div>
-            <div className="flex justify-center gap-3 md:justify-end">
-              {identifiedPlants.map((plant, i) => (
+            <div className="mx-auto grid w-full max-w-[17rem] grid-cols-2 gap-3 sm:max-w-none sm:grid-cols-4 md:mx-0 md:ml-auto md:max-w-[17rem] md:grid-cols-2">
+              {plants.map((plant) => (
                 <Link
                   key={plant.id}
                   href={`/plant-hub/${plant.id}`}
-                  className={`w-24 rounded-2xl bg-white p-2 text-center text-ink shadow-lift transition-transform hover:-translate-y-1 sm:w-28 ${i === 1 ? "md:-translate-y-4 md:hover:-translate-y-5" : ""}`}
+                  data-testid={`teaser-${plant.id}`}
+                  className="rounded-2xl bg-white p-2 text-center text-ink shadow-lift transition-transform hover:-translate-y-1"
                 >
-                  <div className="rounded-xl" style={{ backgroundColor: plant.tint }}>
+                  <div className="relative rounded-xl" style={{ backgroundColor: plant.tint }}>
                     <PlantArt kind={plant.art} bg={plant.tint} className="w-full p-1.5" />
+                    {!plant.identified && (
+                      <span className="absolute inset-x-1 top-1 rounded-full bg-white px-1 py-0.5 text-[10px] font-bold leading-tight text-muted ring-1 ring-line">
+                        Not identified yet
+                      </span>
+                    )}
                   </div>
                   <p className="mt-1.5 truncate text-xs font-semibold">{plant.nickname}</p>
                 </Link>

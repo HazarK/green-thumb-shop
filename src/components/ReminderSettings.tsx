@@ -1,9 +1,10 @@
 "use client";
 
+import { useRef } from "react";
 import type { IdentifiedPlant, Reminder } from "@/types";
 import { addDays, formatDate } from "@/lib/dates";
-import { FREQUENCY_OPTIONS, frequencyLabel, getStatus, isDue } from "@/lib/reminders";
-import { markWatered, showToast, undoWatered, updateReminder } from "@/lib/store";
+import { FREQUENCY_OPTIONS, frequencyLabel, getStatus, isDue, turnedOnLabel } from "@/lib/reminders";
+import { markWatered, setReminderEnabled, showToast, undoWatered, updateReminder } from "@/lib/store";
 import { BellIcon, CheckIcon, DropIcon } from "./Icons";
 import { NotificationPreview } from "./NotificationPreview";
 import { StatusChip } from "./StatusChip";
@@ -19,6 +20,8 @@ interface Props {
 export function ReminderSettings({ plant, reminder, canUndo }: Props) {
   const status = getStatus(reminder);
   const justDone = status.wateredToday && canUndo;
+  const turnedOn = turnedOnLabel(reminder);
+  const toggleRef = useRef<HTMLInputElement>(null);
   const options = FREQUENCY_OPTIONS.includes(plant.defaultFrequencyDays)
     ? FREQUENCY_OPTIONS
     : [...FREQUENCY_OPTIONS, plant.defaultFrequencyDays].sort((a, b) => a - b);
@@ -32,15 +35,19 @@ export function ReminderSettings({ plant, reminder, canUndo }: Props) {
             Watering reminder
           </h2>
         </div>
-        <label className="flex cursor-pointer items-center gap-3 text-sm font-semibold">
+        <div className="flex flex-col items-end gap-1">
+        <label className={`flex items-center gap-3 text-sm font-semibold ${reminder.enabled ? "cursor-pointer" : "cursor-not-allowed text-muted"}`}>
           <span>{reminder.enabled ? "Reminder on" : "Reminder off"}</span>
           <input
+            ref={toggleRef}
             type="checkbox"
             role="switch"
             className="peer sr-only"
             checked={reminder.enabled}
+            // Opt-in: while off, the "Turn on watering reminder" button below is the way in.
+            disabled={!reminder.enabled}
             onChange={(e) => {
-              updateReminder(plant.id, { enabled: e.target.checked });
+              setReminderEnabled(plant.id, e.target.checked);
               showToast({
                 message: e.target.checked
                   ? `Watering reminder for ${plant.nickname} is on.`
@@ -50,6 +57,12 @@ export function ReminderSettings({ plant, reminder, canUndo }: Props) {
           />
           <span className="relative h-7 w-12 rounded-full bg-line transition-colors after:absolute after:left-1 after:top-1 after:h-5 after:w-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:bg-leaf peer-checked:after:translate-x-5 peer-focus-visible:outline peer-focus-visible:outline-3 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-sky" />
         </label>
+          {turnedOn && (
+            <p className="text-xs text-muted" data-testid="reminder-opt-in">
+              You turned this on · {turnedOn}
+            </p>
+          )}
+        </div>
       </div>
 
       <div className="mt-6 grid gap-6 lg:grid-cols-[1.25fr_1fr]">
@@ -101,6 +114,28 @@ export function ReminderSettings({ plant, reminder, canUndo }: Props) {
             data-testid="reminder-status"
             className={`mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl p-4 ${justDone ? "bg-mint" : "bg-cream"}`}
           >
+            {!reminder.enabled ? (
+              <>
+                <div>
+                  <StatusChip status={status} />
+                  <p className="mt-1.5 text-sm text-muted">Optional. We only remind you if you turn this on.</p>
+                </div>
+                <button
+                  type="button"
+                  className={`${btnPrimary} !py-2.5`}
+                  onClick={() => {
+                    setReminderEnabled(plant.id, true);
+                    showToast({ message: `Watering reminder for ${plant.nickname} is on.` });
+                    // The button is replaced, so hand focus to the now-enabled toggle.
+                    requestAnimationFrame(() => toggleRef.current?.focus());
+                  }}
+                >
+                  <BellIcon width={17} height={17} />
+                  Turn on watering reminder
+                </button>
+              </>
+            ) : (
+              <>
             {justDone ? (
               <div className="flex items-center gap-3">
                 <span className="flex h-10 w-10 shrink-0 animate-pop items-center justify-center rounded-full bg-leaf text-white">
@@ -143,6 +178,8 @@ export function ReminderSettings({ plant, reminder, canUndo }: Props) {
                 Mark as watered
               </button>
             )}
+              </>
+            )}
           </div>
         </div>
 
@@ -153,7 +190,7 @@ export function ReminderSettings({ plant, reminder, canUndo }: Props) {
           </p>
           <div className="mt-3">
             <NotificationPreview
-              when={reminder.enabled ? formatDate(status.nextDue) : "paused"}
+              when={reminder.enabled ? formatDate(status.nextDue) : "reminder off"}
               title={`Time to water your ${plant.nickname} 💧`}
               body={`It's been ${reminder.frequencyDays} days. Tap to log it and see this week's care tip.`}
             />

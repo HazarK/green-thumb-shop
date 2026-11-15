@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { identifiedPlants, plants, purchaseDateISO } from "@/data/plants";
 import { getProduct } from "@/data/products";
-import { addDays, formatDate, todayISO } from "@/lib/dates";
+import { formatDate, todayISO } from "@/lib/dates";
 import { getStatus, isDue } from "@/lib/reminders";
 import { useDemoState } from "@/lib/store";
 import { PlantArt } from "./art/PlantArt";
@@ -36,6 +36,9 @@ export function PlantHubDashboard() {
 
   const statuses = identifiedPlants.map((plant) => ({ plant, status: getStatus(state.reminders[plant.id]) }));
   const unidentified = plants.filter((plant) => !plant.identified);
+  // Reminders are opt-in: only the ones Alex turned on appear as care tasks.
+  const withReminder = identifiedPlants.filter((plant) => state.reminders[plant.id].enabled);
+  const withoutReminder = identifiedPlants.filter((plant) => !state.reminders[plant.id].enabled);
   const waitingFor = state.notifyWhenBack.map((id) => getProduct(id)).filter((p) => p !== undefined);
   const dueCount = statuses.filter((s) => isDue(s.status)).length;
   const picks = identifiedPlants
@@ -64,7 +67,7 @@ export function PlantHubDashboard() {
             <DropIcon className="text-sky" /> Care reminders
           </h2>
           <ul className="mt-4 space-y-3">
-            {identifiedPlants.map((plant) => (
+            {withReminder.map((plant) => (
               <ReminderCard
                 key={plant.id}
                 plant={plant}
@@ -72,6 +75,32 @@ export function PlantHubDashboard() {
                 canUndo={Boolean(state.undo[plant.id])}
               />
             ))}
+            {withoutReminder.length > 0 && (
+              <li
+                data-testid="reminders-off"
+                className="rounded-3xl border border-dashed border-line bg-white/60 px-4 py-3.5 text-sm sm:px-5"
+              >
+                {withoutReminder.map((plant, i) => (
+                  <span key={plant.id}>
+                    {i > 0 && ", "}
+                    <Link
+                      href={`/plant-hub/${plant.id}#reminder`}
+                      className="font-semibold underline decoration-line underline-offset-4 hover:decoration-forest"
+                    >
+                      {plant.nickname}
+                    </Link>
+                  </span>
+                ))}
+                <span className="text-muted">: {withoutReminder.length === 1 ? "reminder" : "reminders"} off · </span>
+                <Link
+                  href={`/plant-hub/${withoutReminder[0].id}#reminder`}
+                  aria-label={`Turn on a watering reminder for ${withoutReminder[0].nickname}`}
+                  className="font-semibold text-forest underline underline-offset-4"
+                >
+                  Turn on
+                </Link>
+              </li>
+            )}
             {unidentified.map((plant) => (
               <li key={plant.id} data-testid={`reminder-${plant.id}`} data-state="unavailable">
                 <Link
@@ -126,11 +155,6 @@ export function PlantHubDashboard() {
               body="It's been 2 weeks. Tap to log it and see this week's care tip."
               when={formatDate(todayISO())}
             />
-            <NotificationPreview
-              title="Feeding season has started 🌱"
-              body="Succulents grow fastest from April to September. See what your Echeveria needs."
-              when={formatDate(addDays(todayISO(), 5))}
-            />
           </div>
           <p className="mt-3 rounded-xl bg-cream px-3 py-2 text-xs leading-relaxed text-muted">
             <strong className="text-ink">Prototype note:</strong> notifications are simulated here. Push and email
@@ -145,8 +169,9 @@ export function PlantHubDashboard() {
             </div>
             <div className="rounded-2xl bg-sun-soft px-2 py-3">
               <dt className="text-xs text-[#7A5A00]">Plants thriving</dt>
-              <dd className="font-display text-2xl font-semibold text-[#7A5A00]">
-                {plants.length - statuses.filter((s) => s.status.state === "overdue").length}/{plants.length}
+              <dd className="font-display text-2xl font-semibold text-[#7A5A00]" data-testid="plants-thriving">
+                {identifiedPlants.length - statuses.filter((s) => s.status.state === "overdue").length}/
+                {identifiedPlants.length} <span className="font-sans text-xs font-semibold">tracked</span>
               </dd>
             </div>
           </dl>

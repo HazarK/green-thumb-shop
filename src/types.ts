@@ -53,6 +53,11 @@ export interface IdentifiedPlant extends PlantBase {
   defaultFrequencyDays: number;
   /** Demo seed: how many days ago the plant was last watered. */
   seedLastWateredDaysAgo: number;
+  /**
+   * Demo seed: Alex opted in to this plant's watering reminder this many days
+   * ago. Reminders are opt-in, so plants without it start with the reminder off.
+   */
+  seedReminderOnDaysAgo?: number;
   recommendations: Recommendation[];
 }
 
@@ -104,7 +109,10 @@ export interface Product {
 }
 
 export interface Reminder {
+  /** Reminders are opt-in: off until the customer turns one on. */
   enabled: boolean;
+  /** Local date (YYYY-MM-DD) the customer turned the reminder on. */
+  enabledOn?: string;
   frequencyDays: number;
   /** Local date, YYYY-MM-DD */
   lastWatered: string;

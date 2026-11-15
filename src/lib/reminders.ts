@@ -13,8 +13,10 @@ export interface ReminderStatus {
 }
 
 export function seedReminder(plant: IdentifiedPlant): Reminder {
+  const optedIn = plant.seedReminderOnDaysAgo !== undefined;
   return {
-    enabled: true,
+    enabled: optedIn,
+    ...(optedIn ? { enabledOn: addDays(todayISO(), -plant.seedReminderOnDaysAgo!) } : {}),
     frequencyDays: plant.defaultFrequencyDays,
     lastWatered: addDays(todayISO(), -plant.seedLastWateredDaysAgo),
   };
@@ -55,4 +57,12 @@ export function frequencyLabel(days: number): string {
   if (days === 7) return "Every week";
   if (days % 7 === 0) return `Every ${days / 7} weeks`;
   return `Every ${days} days`;
+}
+
+/** "today", "1 day ago", "22 days ago" — for "You turned this on · …". */
+export function turnedOnLabel(reminder: Reminder): string | null {
+  if (!reminder.enabled || !reminder.enabledOn) return null;
+  const days = Math.max(0, daysBetween(reminder.enabledOn, todayISO()));
+  if (days === 0) return "today";
+  return days === 1 ? "1 day ago" : `${days} days ago`;
 }

@@ -12,7 +12,7 @@ import { seedReminder } from "./reminders";
  * localStorage so demo interactions survive a refresh — there is no backend.
  */
 
-const STORAGE_KEY = "green-thumb-shop:demo:v1";
+const STORAGE_KEY = "green-thumb-shop:demo:v2";
 
 export interface OrderSummary {
   number: string;
@@ -168,6 +168,18 @@ export function updateReminder(plantId: string, patch: Partial<Reminder>) {
     const r = s.reminders[plantId];
     if (!r) return s;
     return { ...s, reminders: { ...s.reminders, [plantId]: { ...r, ...patch } } };
+  });
+}
+
+/** Opt in to (or out of) a plant's watering reminder. */
+export function setReminderEnabled(plantId: string, on: boolean) {
+  update((s) => {
+    const r = s.reminders[plantId];
+    if (!r) return s;
+    const next: Reminder = { ...r, enabled: on };
+    if (on) next.enabledOn = todayISO();
+    else delete next.enabledOn;
+    return { ...s, reminders: { ...s.reminders, [plantId]: next } };
   });
 }
 

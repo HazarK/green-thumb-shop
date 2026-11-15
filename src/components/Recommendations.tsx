@@ -72,15 +72,17 @@ export function Recommendations({ plant }: { plant: IdentifiedPlant }) {
                   <p id={noteId} role="status" className="mt-3 flex gap-2 rounded-2xl bg-clay-soft px-3.5 py-3 text-sm leading-snug text-clay">
                     <AlertIcon width={18} height={18} className="mt-0.5 shrink-0" />
                     <span>
-                      Sorry, this is out of stock right now.
-                      {alternative && (
+                      Best match for your {plant.nickname}, but sold out right now
+                      {alternative ? (
                         <>
-                          {" "}
+                          .{" "}
                           <Link href={`/product/${alternative.id}`} className="font-bold underline underline-offset-2">
                             Try {alternative.name.split(",")[0]} instead
                           </Link>
-                          .
+                          , or get a reminder when it&rsquo;s back.
                         </>
+                      ) : (
+                        <>. Get a reminder when it&rsquo;s back.</>
                       )}
                     </span>
                   </p>

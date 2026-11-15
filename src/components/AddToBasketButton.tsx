@@ -21,7 +21,7 @@ export function AddToBasketButton({ product, qty = 1, className = "", describedB
   if (!product.inStock) {
     return (
       <button type="button" disabled aria-describedby={describedBy} className={`${btnPrimary} ${size} ${className}`}>
-        Out of stock
+        Sold out
       </button>
     );
   }
